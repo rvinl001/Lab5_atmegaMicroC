@@ -13,8 +13,8 @@
 #endif
 
 
-enum States {init, Start, Inc, Dec, Both1, Both2, Release} States;
-
+enum States {init, Start, Inc, Dec, Hold1, Hold2, Release, Both} States;
+unsigned char ctr = 0x07;
 void tick(){
 	switch (States)
 	{
@@ -30,61 +30,80 @@ void tick(){
 			}else if ((PINA & 0x03) == 0x02){
 				States = Dec;
 				break;
-			}else{
+			}else if (PINA == 0x00){
 				States = init;
 				break;
 			}
 			
 		case Inc:
-			if ((PINA & 0x03) == 0x00 || (PINA & 0x03) == 0x01)
+			if ((PINA & 0x03) == 0x01)
 			{
-				States = Inc;
+				States = Hold1;
 				break;
-			}else if ((PINA & 0x03) == 0x02 || (PINA & 0x03) == 0x03){
-				States = Both1;
+			}else if ((PINA & 0x03) == 0x03){
+				States = Both;
 				break;
+			}
+			else if (PINA == 0x00)
+			{
+				States = init;
 			}
 			
 		case Dec:
-			if ((PINA & 0x03) == 0x00 || (PINA & 0x03) == 0x02)
+			if ((PINA & 0x03) == 0x02)
 			{
-				States = Dec;
+				States = Hold2;
 				break;
-			}else if ((PINA & 0x03) == 0x01 || (PINA & 0x03) == 0x03){
-				States = Both2;
+			}else if ((PINA & 0x03) == 0x03){
+				States = Both;
 				break;
 			}
-				
-		case Both1:
-			if ((PINA & 0x03) == 0x00 || (PINA & 0x03) == 0x01)
-			{
-				States = Release;
-				break;
-			}else if ((PINA & 0x03) == 0x02 || (PINA & 0x03) == 0x03){
-				States = Both1;
-				break;
-			}
-			
-		case Both2:
-			if ((PINA & 0x03) == 0x00 || (PINA & 0x03) == 0x02)
-			{
-				States = Release;
-				break;
-			}else if ((PINA & 0x03) == 0x01 || (PINA & 0x03) == 0x03){
-				States = Both2;
-				break;
-			}
-			
-		case Release:
-			if ((PINA & 0x03) == 0x00)
+			else if (PINA = 0x00)
 			{
 				States = init;
+			}
+		case Hold1:
+			if (PINA == 0x01){
+				States = Hold1;
 				break;
-			}else{
+			}
+			else if (PINA == 0x00){
 				States = Release;
 				break;
 			}
-		
+			else if (PINA == 0x03) {
+				States = Both;
+				break;
+			}
+                case Hold2:
+                        if (PINA == 0x02){
+                                States = Hold2;
+                                break;
+                        }
+                        else if (PINA == 0x00){
+                                States = Release;
+                                break;
+                        }
+			else if (PINA == 0x03) {
+				States = Both;
+				break;
+			}
+
+		case Release:
+			if ((PINA & 0x03) == 0x01)
+			{
+				States = Inc;
+				break;
+			}else if (PINA == 0x02){
+				States = Dec;
+				break;
+			}
+			else if (PINA == 0x03){
+				States = Both;
+				break;
+			}
+		case Both:
+			break;
 		default:
 			break;
 			
@@ -92,26 +111,28 @@ void tick(){
 	}
 	
 	switch(States) {   // State actions
-     case init:
-        PORTC = 0x07;
-        break;
-     case Inc:
-		PORTC = 0x09;
-        break;
-     case Dec:
-        PORTC = 0x00;
-        break;
-     case Both1:
-		PORTC = 0x00;
-        break;
-	 case Both2:
-		PORTC = 0x00;
-        break;
-	case Release:
-		PORTC = 0x00;
+     	case init:
+        	ctr = 0x07;
+       	 	break;
+     	case Inc:
+		if (ctr < 9)
+			ctr++;
+        	break;
+     	case Dec:
+        	if (ctr > 0)
+			ctr--;
+        	break;
+	case Hold1:
 		break;
-     default:
-        break;
+	case Hold2:
+		break;
+	case Release:
+		break;
+	case Both:
+		ctr = 0;
+		break;
+     	default:
+        	break;
    } // State actions
 	
 }
@@ -122,9 +143,10 @@ int main(void)
     DDRA = 0x00; PORTA = 0xFF;
     DDRC = 0xFF; PORTC = 0x00;
     States = Start;
-	
+    ctr = 0x07;	
     while (1) 
     {
-		tick();
+	tick();
+	PORTC = ctr;	
     }
 }

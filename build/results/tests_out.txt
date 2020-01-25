@@ -1,7 +1,8 @@
-Breakpoint 1 at 0x2b4: file source/main.c, line 126.
+Breakpoint 1 at 0x2e4: file source/main.c, line 147.
 Note: automatically using hardware breakpoints for read-only addresses.
 ======================================================
 Running all tests..."
 
-"PINA: 0x01 => State: Inc"..."PINA: 0x01 => State: Dec"..."PINA: 0x01, 0x00 => State: Both1"..."PINA: 0x01, 0x00, 0x01 => State: Both2"..."PINA: 0x01, 0x00 => State: Release"..."PINA: 0x01, 0x00, 0x01 => State: Release"...======================================================
+evaluation of this expression requires the program to have a function "malloc".
+"PINA: 0x02 => State: Release, 0x06"..."PINA: 0x01 twice => State: Release, 0x09"..."PINA: 0x02 three times => State: Release, 0x04"..."PINA: 0x02 two times then 0x03 => State: init, 0x07"..."PINA: 0x01 then 0x02 => State: Release, 0x07"...======================================================
 Quitting: Remote doesn't know how to detach
