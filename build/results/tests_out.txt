@@ -1,24 +1,7 @@
-Breakpoint 1 at 0x334: file source/main.c, line 165.
+Breakpoint 1 at 0x31e: file source/main.c, line 166.
 Note: automatically using hardware breakpoints for read-only addresses.
 ======================================================
 Running all tests..."
 
-evaluation of this expression requires the program to have a function "malloc".
-
-	Expected 0x08 
-	PORTC '0x800028:	0x01
-"PINA: 0x02 => State: Release, 0x06"...
-	Expected 0x06 
-	PORTC '0x800028:	0x00
-"PINA: 0x01 twice => State: Release, 0x09"...
-	Expected 0x09 
-	PORTC '0x800028:	0x02
-"PINA: 0x02 three times => State: Release, 0x04"...
-	Expected 0x04 
-	PORTC '0x800028:	0x00
-"PINA: 0x02 two times then 0x03 => State: init, 0x07"...
-	Expected Both but got States:6"PINA: 0x01 then 0x02 => State: Release, 0x07"...
-	Expected 0x07 
-	PORTC '0x800028:	0x00
-======================================================
+"PINA: 0x01 => State: Release, 0x01"..."PINA: 0x02 => State: Release, 0x00"..."PINA: 0x01 twice => State: Release, 0x02"..."PINA: 0x01 two times then 0x02 => State: Release, 0x01"..."PINA: 0x01 two times then 0x03 => State: Release, 0x00"..."PINA: 0x01 two times then 0x03 then 0x01 => State: Release, 0x00"..."PINA: 0x01 twice, 0x03, 0x01 twice, 0x00 => State: Release, 0x01"...======================================================
 Quitting: Remote doesn't know how to detach

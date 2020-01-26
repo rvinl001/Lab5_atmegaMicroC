@@ -26,29 +26,29 @@
 echo ======================================================\n
 echo Running all tests..."\n\n
 
-t "PINA: 0x01 => State: Release, 0x08"
+test "PINA: 0x01 => State: Release, 0x01"
 set States = Start
 setPINA 0x01
 continue 5
 expect States Hold1
 setPINA 0x00
 continue 5
-expectPORTC 0x08
+expectPORTC 0x01
 expect States Release
 checkResult
 
-test "PINA: 0x02 => State: Release, 0x06"
+test "PINA: 0x02 => State: Release, 0x00"
 set States = Start
 setPINA 0x02
 continue 5
 expect States Hold2
 setPINA 0x00
 continue 5
-expectPORTC 0x06
+expectPORTC 0x00
 expect States Release
 checkResult
 
-test "PINA: 0x01 twice => State: Release, 0x09"
+test "PINA: 0x01 twice => State: Release, 0x02"
 set States = Start
 setPINA 0x01
 continue 5
@@ -60,15 +60,20 @@ continue 5
 expect States Hold1
 setPINA 0x00
 continue 5
-expectPORTC 0x09
+expectPORTC 0x02
 expect States Release
 checkResult
 
-test "PINA: 0x02 three times => State: Release, 0x04"
+test "PINA: 0x01 two times then 0x02 => State: Release, 0x01"
 set States = Start
-setPINA 0x02
+setPINA 0x01
 continue 5
-expect States Hold2
+expect States Hold1
+setPINA 0x00
+continue 5
+setPINA 0x01
+continue 5
+expect States Hold1
 setPINA 0x00
 continue 5
 setPINA 0x02
@@ -76,45 +81,96 @@ continue 5
 expect States Hold2
 setPINA 0x00
 continue 5
-setPINA 0x02
-continue 5
-expect States Hold2
-setPINA 0x00
-continue 5
-expectPORTC 0x04
+expectPORTC 0x01
 expect States Release
 checkResult
 
-test "PINA: 0x02 two times then 0x03 => State: init, 0x07"
+test "PINA: 0x01 two times then 0x03 => State: Release, 0x00"
 set States = Start
-setPINA 0x02
+setPINA 0x01
 continue 5
-expect States Hold2
+expect States Hold1
 setPINA 0x00
 continue 5
-setPINA 0x02
+setPINA 0x01
 continue 5
 setPINA 0x00
 continue 5
 setPINA 0x03
 continue 5
+setPINA 0x00
+expect States Hold3
+continue 5
 expectPORTC 0x00
-expect States Both
+expect States Release
 checkResult
 
-test "PINA: 0x01 then 0x02 => State: Release, 0x07"
+test "PINA: 0x01 two times then 0x03 then 0x01 => State: Release, 0x00"
 set States = Start
+setPINA 0x01
+continue 5
+expect States Hold1
+setPINA 0x00
+continue 5
 setPINA 0x01
 continue 5
 setPINA 0x00
 continue 5
-setPINA 0x02
+setPINA 0x03
+continue 5
+setPINA 0x00
+expect States Hold3
+continue 5
+expectPORTC 0x00
+expect States Release
+continue 5
+setPINA 0x01
+continue 5
+expect States Hold1
+setPINA 0x00
+continue 5
+expectPORTC 0x01
+expect States Release
+checkResult
+
+test "PINA: 0x01 twice, 0x03, 0x01 twice, 0x00 => State: Release, 0x01"
+set States = Start
+setPINA 0x01
+continue 5
+expect States Hold1
+setPINA 0x00
+continue 5
+setPINA 0x01
 continue 5
 setPINA 0x00
 continue 5
-expectPORTC 0x07
+setPINA 0x03
+continue 5
+setPINA 0x00
+expect States Hold3
+continue 5
+expectPORTC 0x00
+expect States Release
+continue 5
+setPINA 0x01
+continue 5
+expect States Hold1
+setPINA 0x00
+continue 5
+setPINA 0x01
+continue 5
+expect States Hold1
+setPINA 0x00
+continue 5
+setPINA 0x02
+continue 5
+expect States Hold2
+setPINA 0x00
+continue 5
+expectPORTC 0x01
 expect States Release
 checkResult
+
 
 
 # Report on how many tests passed/tests ran

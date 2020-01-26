@@ -30,8 +30,8 @@ void tick(){
 			}else if ((PINA & 0x03) == 0x02){
 				States = Dec;
 				break;
-			}else if (PINA == 0x00){
-				States = init;
+			}else if (PINA == 0x03){
+				States = Both;
 				break;
 			}
 			
@@ -44,10 +44,10 @@ void tick(){
 				States = Both;
 				break;
 			}
-			else if (PINA == 0x00)
-			{
-				States = init;
-			}
+		//	else if (PINA == 0x00)
+		//	{
+		//		States = init;
+		//	}
 			
 		case Dec:
 			if ((PINA & 0x03) == 0x02)
@@ -58,10 +58,10 @@ void tick(){
 				States = Both;
 				break;
 			}
-			else if (PINA = 0x00)
-			{
-				States = init;
-			}
+		//	else if (PINA = 0x00)
+		//	{
+		//		States = init;
+		//	}
 		case Hold1:
 			if (PINA == 0x01){
 				States = Hold1;
@@ -71,7 +71,7 @@ void tick(){
 				States = Release;
 				break;
 			}
-			else if (PINA == 0x03) {
+			else if (PINA == 0x02) {
 				States = Both;
 				break;
 			}
@@ -84,7 +84,7 @@ void tick(){
                                 States = Release;
                                 break;
                         }
-			else if (PINA == 0x03) {
+			else if (PINA == 0x01) {
 				States = Both;
 				break;
 			}
@@ -107,10 +107,10 @@ void tick(){
 				States = Hold3;
 				break;
 			}
-			else if (PINA == 0x00){
-				States = Release;
-				break;
-			}
+		//	else if (PINA == 0x00){
+		//		States = init;
+		//		break;
+		//	}
 		case Hold3:
 			if (PINA == 0x03) {
 				States = Hold3;
@@ -148,6 +148,7 @@ void tick(){
 		ctr = 0;
 		break;
 	case Hold3:
+		ctr = 0;
 		break;
      	default:
         	break;
