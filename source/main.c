@@ -13,8 +13,8 @@
 #endif
 
 
-enum States {init, Start, Inc, Dec, Hold1, Hold2, Release, Both} States;
-unsigned char ctr = 0x07;
+enum States {init, Start, Inc, Dec, Hold1, Hold2, Hold3, Release, Both} States;
+unsigned char ctr = 0x00;
 void tick(){
 	switch (States)
 	{
@@ -103,7 +103,23 @@ void tick(){
 				break;
 			}
 		case Both:
-			break;
+			if (PINA == 0x03) {
+				States = Hold3;
+				break;
+			}
+			else if (PINA == 0x00){
+				States = Release;
+				break;
+			}
+		case Hold3:
+			if (PINA == 0x03) {
+				States = Hold3;
+				break;
+			}
+			else if (PINA == 0x00) {
+				States = Release;
+				break;
+			}
 		default:
 			break;
 			
@@ -112,7 +128,7 @@ void tick(){
 	
 	switch(States) {   // State actions
      	case init:
-        	ctr = 0x07;
+        	ctr = 0x00;
        	 	break;
      	case Inc:
 		if (ctr < 9)
@@ -131,6 +147,8 @@ void tick(){
 	case Both:
 		ctr = 0;
 		break;
+	case Hold3:
+		break;
      	default:
         	break;
    } // State actions
@@ -143,7 +161,7 @@ int main(void)
     DDRA = 0x00; PORTA = 0xFF;
     DDRC = 0xFF; PORTC = 0x00;
     States = Start;
-    ctr = 0x07;	
+    ctr = 0x00;	
     while (1) 
     {
 	tick();
